@@ -2,7 +2,7 @@ from osgeo import ogr
 import os
 import random
 
-all = r'C:/konrad\Projects/ImageSegmentation/SpawnCreek/VbPoints'
+all = r'C:/konrad\Projects/ImageSegmentation/SpawnCreek/AllPoints'
 train = r'C:/konrad/Projects/ImageSegmentation/SpawnCreek/TrainPoints'
 test = r'C:/konrad/Projects/ImageSegmentation/SpawnCreek/TestPoints'
 

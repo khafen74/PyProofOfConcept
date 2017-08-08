@@ -10,8 +10,8 @@ from skimage.segmentation import quickshift, felzenszwalb
 from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 
-suffix = "_vb"
-RASTER_DATA_FILE = "C:/konrad/GIS_Data/USA/Imagery/NAIP/ImageSegmentationExample/spawn_4band"+suffix+".tif"
+suffix = ""
+RASTER_DATA_FILE = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/Imagery/spawn_4band"+suffix+".tif"
 TRAIN_DATA_PATH = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/TrainPoints"
 TEST_DATA_PATH = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/TestPoints"
 
@@ -54,10 +54,10 @@ bands_data = []
 print ("n bands = "+str(n_bands))
 for b in range(1, n_bands+1):
     band = raster_dataset.GetRasterBand(b)
-    nd = 0.0
+    #nd = 0.0
     dat = band.ReadAsArray()
-    dat = np.asfarray(dat, dtype = 'float')
-    dat[dat == nd] = np.nan
+    #dat = np.asfarray(dat, dtype = 'float')
+    #dat[dat == nd] = np.nan
     bands_data.append(dat)
 
 bands_data = np.dstack(b for b in bands_data)
@@ -246,3 +246,4 @@ ax1.set_title('Original image')
 ax2.imshow(clf, interpolation='none', cmap=colors.ListedColormap(np.random.rand(len(classes_labels), 3)))
 ax2.set_title('Clasification')
 
+print ("finished!")
