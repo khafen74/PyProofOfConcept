@@ -10,10 +10,10 @@ from skimage.segmentation import quickshift, felzenszwalb
 from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 
-suffix = ""
+suffix = "_vb"
 RASTER_DATA_FILE = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/Imagery/spawn_4band"+suffix+".tif"
-TRAIN_DATA_PATH = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/TrainPoints"
-TEST_DATA_PATH = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/TestPoints"
+TRAIN_DATA_PATH = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/TrainPointsVb"
+TEST_DATA_PATH = "C:/konrad/Projects/ImageSegmentation/SpawnCreek/TestPointsVb"
 
 print ("input paths set")
 
@@ -54,17 +54,15 @@ bands_data = []
 print ("n bands = "+str(n_bands))
 for b in range(1, n_bands+1):
     band = raster_dataset.GetRasterBand(b)
-    #nd = 0.0
     dat = band.ReadAsArray()
-    #dat = np.asfarray(dat, dtype = 'float')
-    #dat[dat == nd] = np.nan
+    dat = np.ma.masked_where(dat == 0,dat)
     bands_data.append(dat)
 
 bands_data = np.dstack(b for b in bands_data)
 print ("data stacked")
 img = exposure.rescale_intensity(bands_data)
 rgb_img = np.dstack([img[:, :, 2], img[:, :, 1], img[:, :, 0]])
-print("showing figures")
+# print("showing figures")
 # plt.figure()
 # plt.imshow(rgb_img)
 # plt.show()
@@ -93,6 +91,7 @@ else:
     quickband = quickseg.GetRasterBand(1)
     quickband.WriteArray(segments_quick)
     quickband.FlushCache()
+    print ("quick segments written to disk")
 
 if os.path.exists("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/segments_felz"+suffix+".tif"):
     felzseg = gdal.Open("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/segments_felz"+suffix+".tif")
@@ -161,7 +160,7 @@ intersection = set()
 for class_segments in segments_per_klass.values():
     intersection |= accum.intersection(class_segments)
     accum |= class_segments
-assert len(intersection) == 0
+assert len(intersection) == 0, "intersection length is not zero "+str(len(intersection))
 
 train_img = np.copy(segments)
 threshold = train_img.max() + 1
@@ -232,7 +231,7 @@ for segment_id, klass in zip(objects_ids, predicted):
 
 print("classifications propogated to pixels")
 
-clfds = driverTiff.Create("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/class_felz"+suffix+".tif",
+clfds = driverTiff.Create("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/class_quick"+suffix+".tif",
                              raster_dataset.RasterXSize, raster_dataset.RasterYSize, 1, gdal.GDT_Float32)
 clfds.SetGeoTransform(geo_transform)
 clfds.SetProjection(proj)
