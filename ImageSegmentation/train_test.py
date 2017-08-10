@@ -2,9 +2,9 @@ from osgeo import ogr
 import os
 import random
 
-all = r'C:/konrad\Projects/ImageSegmentation/SpawnCreek/AllPoints'
-train = r'C:/konrad/Projects/ImageSegmentation/SpawnCreek/TrainPoints'
-test = r'C:/konrad/Projects/ImageSegmentation/SpawnCreek/TestPoints'
+all = r'C:/konrad\Projects/ImageSegmentation/SpawnCreek/SubPoints'
+train = r'C:/konrad/Projects/ImageSegmentation/SpawnCreek/SubTrain'
+test = r'C:/konrad/Projects/ImageSegmentation/SpawnCreek/SubTest'
 
 driverShp = ogr.GetDriverByName("ESRI Shapefile")
 
