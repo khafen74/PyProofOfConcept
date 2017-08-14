@@ -84,11 +84,11 @@ print ("helper functions defined")
 
 print ("creating multichannel felz segments")
 start = time.time()
-segments_felz = felzenszwalb(img, scale=1, sigma=0.2, min_size=4, multichannel=True)
+segments_felz = quickshift(img, kernel_size=7, max_dist=3, ratio=0.35, convert2lab=False)
 end = time.time()
 print("felzmulti segments done " + str(end-start))
 
-felzseg = driverTiff.Create("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/segments_felzmulti_subset"+suffix+".tif",
+felzseg = driverTiff.Create("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/segments_quick_subset"+suffix+".tif",
                             raster_dataset.RasterXSize, raster_dataset.RasterYSize, 1, gdal.GDT_Float32)
 felzseg.SetGeoTransform(geo_transform)
 felzseg.SetProjection(proj)
@@ -177,7 +177,7 @@ mask[mask>0.0]=1.0
 mask[mask==0.0]=-1.0
 clf = np.multiply(mask, clf)
 clf[clf<0.0]=-9999.0
-clfds = driverTiff.Create("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/class_felz"+suffix+".tif",
+clfds = driverTiff.Create("C:/konrad/Projects/ImageSegmentation/SpawnCreek/Intermediate/class_quick"+suffix+".tif",
                              raster_dataset.RasterXSize, raster_dataset.RasterYSize, 1, gdal.GDT_Float32)
 clfds.SetGeoTransform(geo_transform)
 clfds.SetProjection(proj)
